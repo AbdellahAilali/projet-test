@@ -1,0 +1,64 @@
+
+{% extends "base.html.twig" %}
+
+{% block title %}Admin{% endblock %}
+
+{% block body %}
+{{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m-t-30">
+                <h5>Contact</h5>
+                <table>
+                    <tr>
+                        <th>Id</th>
+                        <th>Adresse email</th>
+                        <th>Quesion</th>
+                        <th>isChecked</th>
+                    </tr>
+                    {% set i = 1 %}
+                    {% for contact in tabContacts %}
+                        <tr>
+                            <td>{{ i }}</td>
+                            <td>{{ contact.email }}</td>
+                            <td>{{ contact.question }}</td>
+                            <td>
+
+                                {{ form_row(form.isCheck) }}
+                            </td>
+                        </tr>
+                        {% set i = i+1 %}
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="lo col-12 col-sm-5 ">
+                <button type="submit" class="btn btn-primary">Modifier</button>
+            </div>
+        </div>
+    </div>
+{{form_end(form)}}
+
+{% endblock %}
+{% block javascripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $("input.fa").click(function () {
+
+            if($(this).hasClass("checko")){
+                var val = 1;
+            }else{
+                 val = 0;
+            }
+            var id = $(this).attr("id");
+            $.ajax({
+                type:    'POST',
+                url:     "http://127.0.0.1:8000/update/"+id,
+                data:    {'etat': val},
+                success: function (msg) {
+                    console.log(msg);
+                }
+            })
+
+        });
+    </script>
+{% endblock %}
