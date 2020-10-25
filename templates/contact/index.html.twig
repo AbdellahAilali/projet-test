@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        {{ form_start(form)}}
+        <div class="row ">
+            <div class="lo col-12 col-sm-5 ">
+                {{ form_row(form.name) }}
+            </div>
+        </div>
+        <div class="row ">
+            <div class="lo col-12 col-sm-5 ">
+                {{ form_row(form.email) }}
+            </div>
+        </div>
+        <div class="row ">
+            <div class="lo col-12 col-sm-5 ">
+                {{ form_row(form.question) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="lo col-12 col-sm-5 ">
+                <button type="submit" class="btn btn-primary">Envoyé</button>
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}
+
