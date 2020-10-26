@@ -4,9 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Contact;
 use App\Form\ContactType;
+use App\Repository\ContactRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -21,11 +25,17 @@ class ContactController extends AbstractController
     public $entityManager;
 
     /**
+     * @var ContactRepository
+     */
+    public $contactRepository;
+
+    /**
      * @param EntityManagerInterface $entityManager
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, ContactRepository $contactRepository)
     {
         $this->entityManager = $entityManager;
+        $this->contactRepository = $contactRepository;
     }
 
     /**
@@ -45,9 +55,10 @@ class ContactController extends AbstractController
             $entityManager->persist($contact);
             $entityManager->flush();
 
-            return $this->render('contact/index.html.twig', ['form' => $form->createView()]);
-        }
+            $this->addFlash('success', 'Votre question a bien étè envoyée');
 
+            return $this->redirectToRoute('contact_form', ['form' => $form->createView()]);
+        }
         return $this->render('contact/index.html.twig', ['form' => $form->createView()]);
     }
 

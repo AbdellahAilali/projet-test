@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Contact;
+use App\Repository\ContactRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactory;
@@ -25,15 +26,23 @@ class AdminController extends AbstractController
     public $formFactory;
 
     /**
+     * @var ContactRepository
+     */
+    public $contactRepository;
+
+    /**
      * @param EntityManagerInterface $entityManager
      * @param FormFactoryInterface $formFactory
+     * @param ContactRepository $contactRepository
      */
     public function __construct(
         EntityManagerInterface $entityManager,
-        FormFactoryInterface $formFactory)
+        FormFactoryInterface $formFactory,
+        ContactRepository $contactRepository)
     {
         $this->formFactory = $formFactory;
         $this->entityManager = $entityManager;
+        $this->contactRepository = $contactRepository;
     }
 
     /**
@@ -42,10 +51,8 @@ class AdminController extends AbstractController
      */
     public function loadAllUserAction()
     {
-        /** @var Contact   [] $contacts */
-        $contacts = $this->entityManager
-            ->getRepository(Contact::class)
-            ->findAll();
+        /** @var Contact $contacts */
+        $contacts = $this->contactRepository->findAll();
 
         if (empty($contacts)) {
             throw new NotFoundHttpException('Contacts not found');
@@ -57,6 +64,7 @@ class AdminController extends AbstractController
             $tabContacts[$key] = [
                 "id" => $contact->getId(),
                 "name" => $contact->getName(),
+                "firstname" => $contact->getFirstname(),
                 "email" => $contact->getEmail(),
                 "question" => $contact->getQuestion(),
                 "isCheck" => $contact->isCheck()
@@ -73,19 +81,16 @@ class AdminController extends AbstractController
      * @param $id
      * @return Response
      */
-    public function updatePublicationAction($id, Request $request)
+    public function updatePublicationAction(string $id, Request $request)
     {
-        echo $id;
-       $response = json_decode($request->getContent(),  true);
+        $response = json_decode($request->getContent(),  true);
+
         /** @var Contact $contact */
-        $contact = $this->entityManager
-            ->getRepository(Contact::class)
-            ->find($id);
-
+        $contact = $this->contactRepository->find($id);
         $contact->updateCheck($response['etat']);
-
         $this->entityManager->flush();
-        return new Response("Success");
+
+        return $this->redirectToRoute("admin_interface");
         
     }
 }

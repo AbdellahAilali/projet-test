@@ -1,0 +1,12 @@
+.center {
+    margin: 4% auto;
+    width: 30%;
+    border: 8px solid black;
+    border-radius: 10px
+}
+
+.form {
+    position: relative;
+    left: 17%;
+    margin: 7% 0% 7% 0%;
+}

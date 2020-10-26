@@ -30,16 +30,24 @@ class Contact
     protected $name;
 
     /**
+     * @var string $firstname
+     *
+     * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank
+     */
+    protected $firstname;
+
+    /**
      * @var string $email
      *
-     * @ORM\Column(type="string", length=255, unique=true)
-     * @Assert\Email
-     * @Assert\NotBlank
+     * @ORM\Column(type="string", length=255)
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email.")
      */
     protected $email;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank
      */
     protected $question;
@@ -48,7 +56,7 @@ class Contact
      * @var bool $isCheck
      * @ORM\Column(type="boolean")
      */
-    protected $isCheck = true;
+    protected $isCheck = false;
 
     public function getId(): ?int
     {
@@ -69,6 +77,22 @@ class Contact
     public function setName(string $name): void
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstname(): ?string
+    {
+        return $this->firstname;
+    }
+
+    /**
+     * @param string $firstname
+     */
+    public function setFirstname(string $firstname): void
+    {
+        $this->firstname = $firstname;
     }
 
     /**

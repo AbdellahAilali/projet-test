@@ -1,60 +1,60 @@
-
 {% extends "base.html.twig" %}
 
-{% block title %}Admin{% endblock %}
+{% block title %} Interface Administrateur {% endblock %}
 
 {% block body %}
-    <form action="/update/id" method="POST">
-    <div class="container">
-        <div class="row">
-            <div class="col s12 m-t-30">
-                <h5>Contact</h5>
-                <table>
-                    <tr>
-                        <th>Id</th>
-                        <th>Adresse email</th>
-                        <th>Quesion</th>
-                        <th>isChecked</th>
-                    </tr>
-                    {% set i = 1 %}
-                    {% for contact in tabContacts %}
-                        <tr>
-                            <td>{{ i }}</td>
-                            <td>{{ contact.email }}</td>
-                            <td>{{ contact.question }}</td>
-                            <td>
-                                    <input class="fa check" type="checkbox" id="{{ contact.id }}"
-                                           {% if contact.isCheck %}checked="checked" {% endif %}>
-                            </td>
-                        </tr>
-                        {% set i = i+1 %}
-                    {% endfor %}
-                </table>
-            </div>
-            <div class="lo col-12 col-sm-5 ">
-                <button type="submit" class="btn btn-primary">Modifier</button>
-            </div>
-        </div>
-    </div>
+    {{ parent() }}
+<div class="container">
+    <h1><span class="badge badge-secondary">Interface Administrateur</span></h1>
+    <form action="/update/id" method="POST" >
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">NOM</th>
+                <th scope="col">PRENOM</th>
+                <th scope="col">ADRESSE EMAIL</th>
+                <th scope="col">QUESTION</th>
+                <th scope="col">TRAITER</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% set i = 1 %}
+            {% for contact in tabContacts %}
+                <tr>
+                    <th scope="row">{{ contact.id }}</th>
+                    <td>{{ contact.name }}</td>
+                    <td>{{ contact.firstname }}</td>
+                    <td>{{ contact.email }}</td>
+                    <td>{{ contact.question }}</td>
+                    <td>
+                        <input class="fa check" type="checkbox" id="{{ contact.id }}"
+                               {% if contact.isCheck %}checked="checked" {% endif %}>
+                    </td>
+                </tr>
+                {% set i = i+1 %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </form>
 </div>
 </form>
 {% endblock %}
 {% block javascripts %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    {{ parent() }}
     <script type="text/javascript">
         $("input.fa").click(function () {
-            const checcked = $(this).is(':checked') ? 1 : 0;
+            const checked = $(this).is(':checked') ? 1 : 0;
             const id = $(this).attr("id");
             $.ajax({
-                type:    'POST',
-                url:     `http://127.0.0.1:8000/update/${id}`,
-                data:    JSON.stringify({'etat': checcked}),
+                type: 'POST',
+                url:     `https://localhost:8000/update/${id}`,
+                data:    JSON.stringify({'etat': checked}),
                 contentType: 'application/json',
-                success: function (msg) {
-                    console.log(msg);
+                success: function () {
+                    alert('Votre modification a bien étè traitée');
                 }
             })
-
         });
     </script>
 {% endblock %}

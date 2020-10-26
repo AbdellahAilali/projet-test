@@ -1,29 +1,40 @@
 {% extends 'base.html.twig' %}
 
+ {% block stylesheets %}
+    {{ parent() }}
+ {% endblock %}
+
 {% block body %}
-    <div class="container">
-        {{ form_start(form)}}
-        <div class="row ">
-            <div class="lo col-12 col-sm-5 ">
-                {{ form_row(form.name) }}
+    {{ parent() }}
+    <div class="center">
+        <div class="card">
+            <div class="card-header">
+                <h2>Demande de contact</h2>
             </div>
         </div>
-        <div class="row ">
-            <div class="lo col-12 col-sm-5 ">
-                {{ form_row(form.email) }}
+        <div class="form">
+            {{ form_start(form, {'attr': {'id': 'form_contact'}}) }}
+            <div class="my-custom-class-for-errors">
+                {{ form_errors(form) }}
             </div>
-        </div>
-        <div class="row ">
-            <div class="lo col-12 col-sm-5 ">
-                {{ form_row(form.question) }}
+            <div class="form-group col-md-8">
+                {{ form_widget(form.name) }}
             </div>
-        </div>
-        <div class="row">
-            <div class="lo col-12 col-sm-5 ">
-                <button type="submit" class="btn btn-primary">Envoyé</button>
+            <div class="form-group col-md-8">
+                {{ form_widget(form.firstname) }}
             </div>
+            <div class="form-group col-md-8">
+                {{ form_widget(form.email) }}
+            </div>
+            <div class="form-group col-md-8">
+                {{ form_widget(form.question) }}
+            </div>
+            <div class="lo col-12 col-lg-5 ">
+                <button type="submit" class="btn btn-primary mb-2$" id="btnSubmit">Envoyer</button>
+            </div>
+            {{ form_end(form) }}
         </div>
-        {{ form_end(form) }}
     </div>
 {% endblock %}
+
 
