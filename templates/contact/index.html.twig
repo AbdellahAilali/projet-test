@@ -6,6 +6,7 @@
 
 {% block body %}
     {{ parent() }}
+    <a href="{{ path('admin_interface') }}" class="btn btn-primary btn-lg square" role="button">Admin</a>
     <div class="center">
         <div class="card">
             <div class="card-header">
@@ -36,5 +37,6 @@
         </div>
     </div>
 {% endblock %}
+
 
 

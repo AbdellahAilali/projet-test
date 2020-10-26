@@ -6,7 +6,6 @@
 }
 
 .form {
-    position: relative;
-    left: 17%;
     margin: 7% 0% 7% 0%;
+    text-align: -webkit-center;
 }

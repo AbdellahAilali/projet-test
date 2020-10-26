@@ -6,11 +6,8 @@ use App\Entity\Contact;
 use App\Form\ContactType;
 use App\Repository\ContactRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -51,11 +48,10 @@ class ContactController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($contact);
-            $entityManager->flush();
+            $this->entityManager->persist($contact);
+            $this->entityManager->flush();
 
-            $this->addFlash('success', 'Votre question a bien étè envoyée');
+            $this->addFlash('success', 'Votre question à bien étè envoyée');
 
             return $this->redirectToRoute('contact_form', ['form' => $form->createView()]);
         }

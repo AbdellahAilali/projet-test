@@ -49,7 +49,7 @@ class AdminController extends AbstractController
      * @Route("/admin", name="admin_interface")
      * @return Response
      */
-    public function loadAllUserAction()
+    public function loadAllContactAction()
     {
         /** @var Contact $contacts */
         $contacts = $this->contactRepository->findAll();
@@ -81,7 +81,7 @@ class AdminController extends AbstractController
      * @param $id
      * @return Response
      */
-    public function updatePublicationAction(string $id, Request $request)
+    public function updateAction(string $id, Request $request)
     {
         $response = json_decode($request->getContent(),  true);
 
