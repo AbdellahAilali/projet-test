@@ -19,7 +19,6 @@ class AdminControllerTest extends WebTestCase
      */
     protected $entityManager;
 
-
     public function setUp()
     {
         $this->client = static::createClient();
@@ -28,17 +27,6 @@ class AdminControllerTest extends WebTestCase
         $this->entityManager = $kernel->getContainer()
             ->get('doctrine')
             ->getManager();
-
-        $this->contact = new Contact();
-        $this->contact->setId('999');
-        $this->contact->setName('johnny');
-        $this->contact->setFirstname('Doeli');
-        $this->contact->setEmail('johndoe@gmail.com');
-        $this->contact->setQuestion('Je voudrais savoir la taille du colis ?');
-        $this->contact->setIsCheck(false);
-
-        $this->entityManager->persist($this->contact);
-        $this->entityManager->flush();
     }
 
     public function testLoadAllContact()
@@ -48,20 +36,10 @@ class AdminControllerTest extends WebTestCase
             'PHP_AUTH_PW'   => 'myPassword',
         ]);
 
-        $crawler = $client->request('GET', '/admin');
+        $client->request('GET', '/admin');
 
         $this->assertEquals(200, $client->getResponse()->getStatusCode());
         $this->assertSelectorTextContains('html h1' , 'Interface Administrateur');
-        $this->assertSelectorTextContains('html tbody td' , 'johnny');
-
-        $expectedName = $crawler->filter('html tbody td')->eq(1);
-        $this->assertSame($expectedName->html() , "Doeli");
-
-        $expectedEmail = $crawler->filter('html tbody td')->eq(2);
-        $this->assertSame($expectedEmail->html() , 'johndoe@gmail.com');
-
-        $expectedQuestion= $crawler->filter('html tbody td')->eq(3);
-        $this->assertSame($expectedQuestion->html() ,'Je voudrais savoir la taille du colis ?');
     }
 
     protected function tearDown()

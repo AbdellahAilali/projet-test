@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\Contact;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -32,7 +33,7 @@ class ContactControllerTest extends WebTestCase
         $form['contact[name]']      = 'Doe';
         $form['contact[firstname]'] = 'john';
         $form['contact[email]']     = 'johndoe@gmail.com';
-        $form['contact[question]']  = 'Voici ma question';
+        $form['contact[question]']  = 'Ma question';
 
         $this->client->submit($form);
 
@@ -42,7 +43,15 @@ class ContactControllerTest extends WebTestCase
     protected function tearDown()
     {
         parent::tearDown();
-        echo'mark1';
+
+        $contacts = $this->entityManager
+            ->getRepository(Contact::class)->findAll();
+
+        foreach ($contacts as $contact) {
+            $this->entityManager->remove($contact);
+            $this->entityManager->flush();
+        }
+
         $this->entityManager->close();
         $this->entityManager = null;
     }
