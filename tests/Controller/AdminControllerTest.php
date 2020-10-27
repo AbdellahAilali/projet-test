@@ -3,10 +3,7 @@
 namespace App\Tests\Controller;
 
 use App\Entity\Contact;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 class AdminControllerTest extends WebTestCase
 {
@@ -15,45 +12,63 @@ class AdminControllerTest extends WebTestCase
     /**
      * @var Contact $contact
      */
-    protected static $contact;
+    protected $contact;
 
     /**
-     * @var EntityManagerInterface $em
+     * @var \Doctrine\ORM\EntityManager
      */
-    protected static $em;
+    protected $entityManager;
+
 
     public function setUp()
-    {     //tester html
-
-        self::$contact = new Contact();
-        self::$contact->setId('143');
-        self::$contact->setName('john');
-        self::$contact->setFirstname('Doe');
-        self::$contact->setEmail('johndoe@gmail.com');
-        self::$contact->setQuestion('J\'ai un problème avec mon ...');
-        self::$contact->setIsCheck(false);
-
-        self::$em->persist(self::$contact);
-        self::$em->flush();
-
+    {
         $this->client = static::createClient();
+
+        $kernel = self::bootKernel();
+        $this->entityManager = $kernel->getContainer()
+            ->get('doctrine')
+            ->getManager();
+
+        $this->contact = new Contact();
+        $this->contact->setId('999');
+        $this->contact->setName('johnny');
+        $this->contact->setFirstname('Doeli');
+        $this->contact->setEmail('johndoe@gmail.com');
+        $this->contact->setQuestion('Je voudrais savoir la taille du colis ?');
+        $this->contact->setIsCheck(false);
+
+        $this->entityManager->persist($this->contact);
+        $this->entityManager->flush();
     }
 
     public function testLoadAllContact()
     {
-        $this->client->request('GET', '/admin');
-        $this->client->loginUser(self::$contact);
+        $client = static::createClient([], [
+            'PHP_AUTH_USER' => 'john@gmail.com',
+            'PHP_AUTH_PW'   => 'myPassword',
+        ]);
 
-        // test e.g. the profile page
-        $this->assertResponseIsSuccessful();
-        $this->assertEquals(
-            Response::HTTP_FOUND,
-            $this->client->getResponse()->getStatusCode());
+        $crawler = $client->request('GET', '/admin');
+
+        $this->assertEquals(200, $client->getResponse()->getStatusCode());
+        $this->assertSelectorTextContains('html h1' , 'Interface Administrateur');
+        $this->assertSelectorTextContains('html tbody td' , 'johnny');
+
+        $expectedName = $crawler->filter('html tbody td')->eq(1);
+        $this->assertSame($expectedName->html() , "Doeli");
+
+        $expectedEmail = $crawler->filter('html tbody td')->eq(2);
+        $this->assertSame($expectedEmail->html() , 'johndoe@gmail.com');
+
+        $expectedQuestion= $crawler->filter('html tbody td')->eq(3);
+        $this->assertSame($expectedQuestion->html() ,'Je voudrais savoir la taille du colis ?');
     }
 
-
-    public static function tearDownAfterClass(): void
+    protected function tearDown()
     {
-        self::$em->remove(self::$contact);
+        parent::tearDown();
+
+        $this->entityManager->close();
+        $this->entityManager = null;
     }
 }

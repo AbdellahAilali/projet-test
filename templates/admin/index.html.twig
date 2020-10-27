@@ -4,10 +4,9 @@
 
 {% block body %}
     {{ parent() }}
-    <h1>toto</h1>
 <div class="container">
     <h1><span class="badge badge-secondary">Interface Administrateur</span></h1>
-    <form action="/update/id" method="POST" >
+    <form action="/update/id" method="POST" class="contact_form" >
         <table class="table table-striped">
             <thead>
             <tr>
@@ -30,7 +29,7 @@
                         <td>{{ contact.email }}</td>
                         <td>{{ contact.question }}</td>
                         <td>
-                            <input class="fa check" type="checkbox" id="{{ contact.id }}"
+                            <input class="fa check" type="checkbox" name="checkbox" id="{{ contact.id }}"
                                    {% if contact.isCheck %} checked="checked" {% endif %}>
                         </td>
                     </tr>
