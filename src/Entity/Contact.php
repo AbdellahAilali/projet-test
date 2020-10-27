@@ -39,8 +39,8 @@ class Contact
      * @var string $email
      *
      * @ORM\Column(type="string", length=255)
-     * @Assert\Email(
-     *     message = "The email '{{ value }}' is not a valid email.")
+     * @Assert\Email
+     *
      */
     protected $email;
 
@@ -59,6 +59,14 @@ class Contact
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    /**
+     * @param mixed $id
+     */
+    public function setId($id): void
+    {
+        $this->id = $id;
     }
 
     /**

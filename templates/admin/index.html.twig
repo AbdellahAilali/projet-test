@@ -4,6 +4,7 @@
 
 {% block body %}
     {{ parent() }}
+    <h1>toto</h1>
 <div class="container">
     <h1><span class="badge badge-secondary">Interface Administrateur</span></h1>
     <form action="/update/id" method="POST" >
@@ -20,8 +21,8 @@
             </thead>
             <tbody>
             {% set i = 1 %}
-            {% if tabContacts is defined %}
-                {% for contact in tabContacts %}
+            {% if contacts is defined %}
+                {% for contact in contacts %}
                     <tr>
                         <th scope="row">{{ contact.id }}</th>
                         <td>{{ contact.name }}</td>

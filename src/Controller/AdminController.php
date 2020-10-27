@@ -41,23 +41,7 @@ class AdminController extends AbstractController
         /** @var Contact $contacts */
         $contacts = $this->getDoctrine()->getRepository(Contact::class)->findAll();
 
-        if (empty($contacts)) {
-            return $this->render('admin/index.html.twig');
-        }
-
-        $tabContacts=[];
-        foreach ($contacts as $contact) {
-            $tabContacts[] = [
-                "id" => $contact->getId(),
-                "name" => $contact->getName(),
-                "firstname" => $contact->getFirstname(),
-                "email" => $contact->getEmail(),
-                "question" => $contact->getQuestion(),
-                "isCheck" => $contact->isCheck()
-            ];
-        }
-
-        return $this->render('admin/index.html.twig', ['tabContacts' => $tabContacts]);
+        return $this->render('admin/index.html.twig', ['contacts' => $contacts]);
 
     }
 
@@ -65,7 +49,6 @@ class AdminController extends AbstractController
      * @Route("update/{id}", name="update")
      * @param Request $request
      * @param $id
-     * @return Response
      */
     public function updateAction(string $id, Request $request)
     {

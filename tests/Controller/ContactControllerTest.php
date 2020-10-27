@@ -31,12 +31,4 @@ class ContactControllerTest extends WebTestCase
             Response::HTTP_FOUND,
             $this->client->getResponse()->getStatusCode());
     }
-
-    public function testContactError()
-    {
-        $this->client->request('POST', '/contactt');
-
-        $this->assertSame(Response::HTTP_NOT_FOUND, $this->client->getResponse()->getStatusCode());
-
-    }
 }
