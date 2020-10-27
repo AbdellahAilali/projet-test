@@ -8,8 +8,9 @@ security:
         backend_users:
             memory:
                 users:
-                    john_admin@gmail.com: { password: '$argon2id$v=19$m=65536,t=4,p=1$Is2D2pIU1Ddmz7CoCMioTQ$yZU8bWxy6k6he3lzg0NBg56MLgi2MEh9PAikOhaPFtA', roles: [ 'ROLE_ADMIN' ] }
-                    jane_admin: { password: '$2y$13$PFi1I ... rGwXCZ', roles: [ 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN' ] }
+                    john@gmail.com: { password: '$argon2id$v=19$m=65536,t=4,p=1$Vz4UAudSh4KOUtPdp5sx7A$6eUdVpx2B7qk4OH4M0ldtM9W1ECkH9q9rl/aOTLOTu0', roles: [ 'ROLE_ADMIN' ] }
+                    jane_admin@gmail.com: { password: '$2y$13$PFi1I ... rGwXCZ', roles: [ 'ROLE_ADMIN', 'ROLE_SUPER_ADMIN' ] }
+                    # The password is "myPassword"
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/

@@ -20,20 +20,22 @@
             </thead>
             <tbody>
             {% set i = 1 %}
-            {% for contact in tabContacts %}
-                <tr>
-                    <th scope="row">{{ contact.id }}</th>
-                    <td>{{ contact.name }}</td>
-                    <td>{{ contact.firstname }}</td>
-                    <td>{{ contact.email }}</td>
-                    <td>{{ contact.question }}</td>
-                    <td>
-                        <input class="fa check" type="checkbox" id="{{ contact.id }}"
-                               {% if contact.isCheck %}checked="checked" {% endif %}>
-                    </td>
-                </tr>
-                {% set i = i+1 %}
-            {% endfor %}
+            {% if tabContacts is defined %}
+                {% for contact in tabContacts %}
+                    <tr>
+                        <th scope="row">{{ contact.id }}</th>
+                        <td>{{ contact.name }}</td>
+                        <td>{{ contact.firstname }}</td>
+                        <td>{{ contact.email }}</td>
+                        <td>{{ contact.question }}</td>
+                        <td>
+                            <input class="fa check" type="checkbox" id="{{ contact.id }}"
+                                   {% if contact.isCheck %} checked="checked" {% endif %}>
+                        </td>
+                    </tr>
+                    {% set i = i+1 %}
+                {% endfor %}
+            {% endif %}
             </tbody>
         </table>
     </form>
@@ -52,7 +54,7 @@
                 data:    JSON.stringify({'etat': checked}),
                 contentType: 'application/json',
                 success: function () {
-                    alert('Votre modification a bien étè traitée');
+                    alert('votre modification a bien été prise en compte');
                 }
             })
         });

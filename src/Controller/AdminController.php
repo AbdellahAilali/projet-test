@@ -3,13 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Contact;
-use App\Repository\ContactRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormFactory;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Form\{FormFactory, FormFactoryInterface};
+use Symfony\Component\HttpFoundation\{Request, Response};
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -26,23 +23,13 @@ class AdminController extends AbstractController
     public $formFactory;
 
     /**
-     * @var ContactRepository
-     */
-    public $contactRepository;
-
-    /**
      * @param EntityManagerInterface $entityManager
      * @param FormFactoryInterface $formFactory
-     * @param ContactRepository $contactRepository
      */
-    public function __construct(
-        EntityManagerInterface $entityManager,
-        FormFactoryInterface $formFactory,
-        ContactRepository $contactRepository)
+    public function __construct(EntityManagerInterface $entityManager, FormFactoryInterface $formFactory)
     {
         $this->formFactory = $formFactory;
         $this->entityManager = $entityManager;
-        $this->contactRepository = $contactRepository;
     }
 
     /**
@@ -52,16 +39,15 @@ class AdminController extends AbstractController
     public function loadAllContactAction()
     {
         /** @var Contact $contacts */
-        $contacts = $this->contactRepository->findAll();
+        $contacts = $this->getDoctrine()->getRepository(Contact::class)->findAll();
 
         if (empty($contacts)) {
-            throw new NotFoundHttpException('Contacts not found');
+            return $this->render('admin/index.html.twig');
         }
 
         $tabContacts=[];
-        foreach ($contacts as $key => $contact) {
-
-            $tabContacts[$key] = [
+        foreach ($contacts as $contact) {
+            $tabContacts[] = [
                 "id" => $contact->getId(),
                 "name" => $contact->getName(),
                 "firstname" => $contact->getFirstname(),
@@ -83,14 +69,17 @@ class AdminController extends AbstractController
      */
     public function updateAction(string $id, Request $request)
     {
-        $response = json_decode($request->getContent(),  true);
-
         /** @var Contact $contact */
-        $contact = $this->contactRepository->find($id);
+        $response = json_decode($request->getContent(),  true);
+        $contact  = $this->getDoctrine()->getRepository(Contact::class)->find($id);
+
+        if (empty($contact)) {
+            throw new NotFoundHttpException('Contact not found');
+        }
+
         $contact->updateCheck($response['etat']);
         $this->entityManager->flush();
 
-        return $this->redirectToRoute("admin_interface");
-        
+        return new Response('success');
     }
 }
